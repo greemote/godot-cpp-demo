@@ -1,11 +1,3 @@
-res://scenes/bullet.tscn
-res://scenes/flicker.gdshader
 res://scenes/game.tscn
-res://scenes/bullet.gd
-res://scenes/level.gd
-res://scenes/level.tscn
-res://scenes/bee.tscn
-res://scenes/gun.tscn
+res://scenes/flicker.gdshader
 res://scenes/player.tscn
-res://scenes/worm.tscn
-res://scenes/ui.tscn

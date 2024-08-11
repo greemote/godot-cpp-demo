@@ -90,7 +90,7 @@ script = ExtResource("1_7wtdy")
 shape = SubResource("CapsuleShape2D_5abow")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(3, 3)
+zoom = Vector2(5, 5)
 position_smoothing_enabled = true
 position_smoothing_speed = 12.0
 
