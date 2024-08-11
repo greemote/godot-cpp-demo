@@ -1,0 +1,60 @@
+[gd_scene load_steps=9 format=3 uid="uid://bpv6htt7k25xn"]
+
+[ext_resource type="Script" path="res://scenes/bee.gd" id="1_00v7b"]
+[ext_resource type="Texture2D" uid="uid://dc6gd65jis7a4" path="res://assets/graphics/Enemies/bee/0.png" id="1_b1oam"]
+[ext_resource type="Shader" path="res://scenes/flicker.gdshader" id="2_55m4u"]
+[ext_resource type="Texture2D" uid="uid://cpxlh06tuiq3j" path="res://assets/graphics/Enemies/bee/1.png" id="4_3so4d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hy341"]
+resource_local_to_scene = true
+shader = ExtResource("2_55m4u")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/amount = 0.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qd8oa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_b1oam")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_3so4d")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7pj08"]
+radius = 3.0
+height = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tn6jh"]
+radius = 57.0
+
+[node name="Bee" type="Bee"]
+process_mode = 4
+collision_layer = 4
+collision_mask = 19
+script = ExtResource("1_00v7b")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_hy341")
+sprite_frames = SubResource("SpriteFrames_qd8oa")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_7pj08")
+
+[node name="Aggro" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Aggro"]
+shape = SubResource("CircleShape2D_tn6jh")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="body_entered" from="Aggro" to="." method="_on_aggro_body_entered"]
+[connection signal="body_exited" from="Aggro" to="." method="_on_aggro_body_exited"]

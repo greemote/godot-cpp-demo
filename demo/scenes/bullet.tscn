@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://b2bhe2hnk4v2u"]
+
+[ext_resource type="Script" path="res://scenes/bullet.gd" id="1_ny0so"]
+[ext_resource type="Texture2D" uid="uid://csurkakmqp2ew" path="res://assets/graphics/bullet/bullet.png" id="1_wwtdy"]
+[ext_resource type="AudioStream" uid="uid://buom1t30mmw6v" path="res://assets/audio/shot_01.ogg" id="2_liqui"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y73w2"]
+size = Vector2(11, 6)
+
+[node name="Bullet" type="Bullet"]
+process_mode = 4
+collision_layer = 16
+collision_mask = 5
+script = ExtResource("1_ny0so")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_wwtdy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_y73w2")
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_liqui")
+
+[node name="TimeToLive" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+
+[connection signal="finished" from="HitSound" to="." method="_on_hit_sound_finished"]
+[connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]

@@ -1,0 +1,146 @@
+[gd_scene load_steps=15 format=3 uid="uid://bv0bqh3tuik0s"]
+
+[ext_resource type="Script" path="res://scenes/player.gd" id="1_7wtdy"]
+[ext_resource type="Texture2D" uid="uid://cv0eiasxi5w77" path="res://assets/graphics/player/basic/idle.png" id="1_e4vh3"]
+[ext_resource type="Shader" path="res://scenes/flicker.gdshader" id="2_87ebc"]
+[ext_resource type="Texture2D" uid="uid://bx3vdkg1gfl7f" path="res://assets/graphics/player/gun/idle.png" id="3_jl4mo"]
+[ext_resource type="Texture2D" uid="uid://cm2ypqi8212a7" path="res://assets/graphics/player/basic/walk.png" id="4_8gvc0"]
+[ext_resource type="Texture2D" uid="uid://cup8dstdpnhch" path="res://assets/graphics/player/gun/walk.png" id="5_ahhfy"]
+[ext_resource type="Texture2D" uid="uid://6v33h2ln3m2l" path="res://assets/graphics/bullet/fire.png" id="6_vysj7"]
+[ext_resource type="AudioStream" uid="uid://dlhrac8wl301o" path="res://assets/audio/synth_laser_03.ogg" id="8_7vytt"]
+[ext_resource type="AudioStream" uid="uid://docyarppblm27" path="res://assets/audio/jump.mp3" id="9_deh1i"]
+[ext_resource type="AudioStream" uid="uid://buom1t30mmw6v" path="res://assets/audio/shot_01.ogg" id="10_qtc31"]
+[ext_resource type="AudioStream" uid="uid://xyjqsuqngdfe" path="res://assets/audio/power_up_01.ogg" id="11_20w3c"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5abow"]
+radius = 4.0
+height = 14.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6irdb"]
+resource_local_to_scene = true
+shader = ExtResource("2_87ebc")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/amount = 0.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vrltd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_e4vh3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_jl4mo")
+}],
+"loop": true,
+"name": &"idleGun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_8gvc0")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_ahhfy")
+}],
+"loop": true,
+"name": &"jumpGun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_8gvc0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_e4vh3")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_ahhfy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_jl4mo")
+}],
+"loop": true,
+"name": &"walkGun",
+"speed": 5.0
+}]
+
+[node name="Player" type="Player" groups=["Player"]]
+process_mode = 4
+collision_layer = 2
+collision_mask = 13
+velocity = Vector2(0, 13590)
+script = ExtResource("1_7wtdy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_5abow")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3, 3)
+position_smoothing_enabled = true
+position_smoothing_speed = 12.0
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="CooldownTimer" type="Timer" parent="Timers"]
+wait_time = 0.6
+one_shot = true
+
+[node name="FireTimer" type="Timer" parent="Timers"]
+wait_time = 0.1
+one_shot = true
+
+[node name="InvisibleFrames" type="Timer" parent="Timers"]
+wait_time = 0.6
+one_shot = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_6irdb")
+sprite_frames = SubResource("SpriteFrames_vrltd")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="Fire" type="Node2D" parent="."]
+
+[node name="FireLeft" type="Sprite2D" parent="Fire"]
+visible = false
+position = Vector2(-10.5, 0)
+texture = ExtResource("6_vysj7")
+flip_h = true
+
+[node name="FireRight" type="Sprite2D" parent="Fire"]
+visible = false
+position = Vector2(10.5, 0)
+texture = ExtResource("6_vysj7")
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="FireSound" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("8_7vytt")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("9_deh1i")
+
+[node name="DamageSound" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("10_qtc31")
+
+[node name="GunPickupSound" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("11_20w3c")
+
+[connection signal="timeout" from="Timers/CooldownTimer" to="." method="_on_cooldown_timer_timeout"]
+[connection signal="timeout" from="Timers/FireTimer" to="." method="_on_fire_timer_timeout"]
+[connection signal="timeout" from="Timers/InvisibleFrames" to="." method="_on_invisible_frames_timeout"]

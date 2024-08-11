@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmbey1m8e1qrr"]
+
+[ext_resource type="Texture2D" uid="uid://6o0y5dj0jbp7" path="res://assets/graphics/player/gun/gun.png" id="1_7l8rc"]
+[ext_resource type="Script" path="res://scenes/gun.gd" id="1_urwff"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vunpe"]
+size = Vector2(10, 4)
+
+[node name="Gun" type="Gun"]
+position = Vector2(0, 4.20109)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_urwff")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_7l8rc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vunpe")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
